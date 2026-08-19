@@ -165,11 +165,17 @@ Todos estão dentro do tabuleiro, então **d4** possui grau 8.
 Medida	Valor	Observação
 
 Ordem |V|:	64	uma por casa do tabuleiro
+
 Tamanho |E|:	168	soma dos graus / 2
+
 Grau mínimo: 2	casas de canto (a1, a8, h1, h8)
+
 Grau máximo: 8 casas centrais
+
 Regularidade: não regular	grau varia conforme a posição
+
 Bipartição:	sim	todo movimento troca a cor da casa
+
 Conectividade:	conexo	existe caminho entre qualquer par de casas
 
 ### 2.5 Validação da representação com a instância pequena
