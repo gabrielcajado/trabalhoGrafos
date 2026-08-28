@@ -1,6 +1,6 @@
 # Marco 2 - Representação computacional
 
-### 2.1 Representação do grafo
+### 1 Representação do grafo
 Escolhemos apresentar o problema por uma **representação implícita do grafo**, nesse caso, uma lista de adjacência seria uma eventual alternativa, mas não é necessária para resolver o problema em questão.
 
 **Por que representação ímplicita?**
@@ -19,7 +19,7 @@ Um movimento é considerado aresta somente quando a nova posição continua dent
 
 Para esse problema dos movimentos do cavalo, a representação implícita é particularmente conveniente porque **todo vértice possui no máximo 8 vizinhos**, e os movimentos possíveis são sempre os mesmos.
 
-### 2.2 Leitura da entrada
+### 2 Leitura da entrada
 A entrada do problema é composta por um ou mais casos de teste.
 
 Cada caso contém duas casas do tabuleiro, por exemplo: 
@@ -51,7 +51,7 @@ a leitura será:
 * origem = "b2"
 * destino = "c4"
 
-### 2.3 Construção do grafo
+### 3 Construção do grafo
 O grafo não precisa ser construído explicitamente antes da execução do algoritmo.
 
 Cada posição do tabuleiro representa um vértice:
@@ -82,7 +82,7 @@ Então, aplicando os 8 movimentos:
 
 Todos estão dentro do tabuleiro, então **d4** possui grau 8.
 
-### 2.4 Medidas estruturais
+### 4 Medidas estruturais
 
 Medida, Valor e Observação.
 
@@ -100,7 +100,7 @@ Medida, Valor e Observação.
 
 **Conectividade**:	conexo,	existe caminho entre qualquer par de casas.
 
-### 2.5 Validação da representação com a instância pequena
+### 5 Validação da representação com a instância pequena
 Tomamos de exemplo a verificação da casa **a1**.
 
 Representação:
