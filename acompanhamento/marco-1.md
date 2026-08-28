@@ -1,72 +1,106 @@
 ## Marco 1 — Modelagem
 
+## 1. Enunciado
 
- 1. Enunciado
-O problema consiste em determinar o menor número de movimentos que um cavalo de xadrez precisa realizar para sair de uma casa de origem e chegar a uma casa de destino em um tabuleiro de xadrez 8×8.
-O cavalo possui um movimento característico: ele se desloca duas casas em uma direção e uma casa perpendicularmente. A partir de uma casa, ele pode realizar até 8 movimentos diferentes, dependendo da posição no tabuleiro.
+O problema consiste em determinar o menor número de movimentos que um cavalo de xadrez precisa realizar para sair de uma casa de origem e chegar a uma casa de destino em um tabuleiro de xadrez 8 × 8.
+
+O cavalo possui um movimento característico: ele se desloca duas casas em uma direção e uma casa perpendicularmente. A partir de uma casa, ele pode realizar até 8 movimentos diferentes, dependendo de sua posição no tabuleiro.
+
 O objetivo é encontrar a menor quantidade de movimentos necessários para sair da casa de origem e chegar à casa de destino.
 
- 2. Entrada
-A entrada contém um ou mais casos de teste.
-Cada caso de teste consiste em uma linha contendo duas casas do tabuleiro, separadas por um espaço.
+## 2. Entrada
+
+A entrada contém um ou mais casos de teste. Cada caso de teste consiste em uma linha contendo duas casas do tabuleiro, separadas por um espaço.
+
 Cada casa é representada por:
 
 - uma letra de `a` até `h`, representando a coluna;
 - um número de `1` até `8`, representando a linha.
 
-Exemplo de entrada
+### Exemplo de entrada
+```
 a1 h8
 a1 c2
 b1 c3
+```
 
-3. Saída
+## 3. Saída
 Para cada caso de teste, o programa deve informar o menor número de movimentos necessários para o cavalo sair da casa de origem e chegar à casa de destino.
 
-4. Restrições
-O tabuleiro possui tamanho fixo de 8 × 8.
-O tabuleiro possui 64 casas.
-As colunas são representadas pelas letras a até h.
-As linhas são representadas pelos números 1 até 8.
-A casa de origem e a casa de destino são diferentes.
-O cavalo não pode realizar movimentos para fora dos limites do tabuleiro.
-Cada movimento realizado pelo cavalo possui custo de 1 movimento.
-A entrada possui um ou mais casos de teste.
+### Exemplo de saída
+```
+To get from a1 to h8 takes 6 knight moves.
+To get from a1 to c2 takes 1 knight moves.
+To get from b1 to c3 takes 1 knight moves.
+```
 
-5. Modelagem como Grafo
-Para transformar o problema em um problema de grafos, cada casa do tabuleiro será representada por um vértice.
-Os movimentos possíveis do cavalo serão representados por arestas.
-Dessa forma, encontrar o menor número de movimentos entre duas casas equivale a encontrar o menor caminho entre dois vértices do grafo.
+## 4. Restrições
+* O tabuleiro possui tamanho fixo de `8 × 8`.
+* O tabuleiro possui 64 casas.
+* As colunas são representadas pelas letras `a` até `h`.
+* As linhas são representadas pelos números `1` até `8`.
+* A casa de origem e a casa de destino são diferentes.
+* O cavalo não pode realizar movimentos para fora dos limites do tabuleiro.
+* Cada movimento realizado pelo cavalo possui custo de 1 movimento.
+* A entrada possui um ou mais casos de teste.
 
-6. Vértices
+## 5. Modelagem como Grafo
+Para transformar o problema em um problema de grafos, cada casa do tabuleiro será representada por um **vértice**.
+
+Os movimentos possíveis do cavalo serão representados por **arestas** entre os vértices.
+
+Dessa forma, encontrar o menor número de movimentos entre duas casas equivale a encontrar o **menor caminho entre dois vértices do grafo**.
+
+## 6. Vértices
 Cada uma das 64 casas do tabuleiro representa um vértice.
 
+Portanto: 
+
+`|V| = 64`
+
 7. Arestas
-Existe uma aresta entre dois vértices quando um cavalo consegue realizar um movimento diretamente entre as duas casas.
+Existe uma aresta entre dois vértices quando um cavalo consegue realizar um movimento diretamente entre as duas casas correspondentes.
 
+Como o movimento do cavalo depende da posição da casa, cada vértice pode possuir até 8 arestas incidentes.
 
-8. Tipo do Grafo
+## 8. Tipo do Grafo
 O grafo é classificado como:
-Grafo não direcionado e não ponderado.
-Grafo não direcionado
+
+* **Não direcionado;**
+* **Não ponderado.**
+
+### Grafo não direcionado
 O grafo é não direcionado porque o movimento do cavalo é reversível.
-Se existe um movimento de a1 para c2, também existe um movimento de c2 para a1.
 
+Se existe um movimento de `a1` para `c2`, também existe um movimento de `c2` para `a1`.
 
-9. Instância Pequena
+### Grafo não ponderado
 
-Entrada
-a1 c2
+O grafo é não ponderado porque todos os movimentos do cavalo possuem o mesmo custo: **1 movimento**.
 
-Resultado Esperado
-Como existe uma aresta direta entre a1 e c2, o cavalo precisa realizar apenas 1 movimento.
+## 9. Instância Pequena
 
-To get from a1 to c2 takes 1 knight moves.
+### Entrada
+`a1 c2`
 
-9.
+### Resultado Esperado
+Como existe uma aresta direta entre `a1` e `c2`, o cavalo precisa realizar apenas **1 movimento**.
+
+`To get from a1 to c2 takes 1 knight moves.`
+
+## 10. Hipótese Inicial de Solução
 A hipótese inicial para resolver o problema é utilizar o algoritmo **BFS (Breadth-First Search)**, também conhecido como **Busca em Largura**.
+
 O tabuleiro será representado como um grafo, onde cada casa será um vértice e cada movimento possível do cavalo será uma aresta.
+
 A partir da casa de origem, a BFS irá explorar as casas por níveis:
+
+```
 Distância 0 → casa de origem
 Distância 1 → casas alcançáveis em 1 movimento
 Distância 2 → casas alcançáveis em 2 movimentos
 Distância 3 → casas alcançáveis em 3 movimentos
+...
+```
+
+Como a BFS explora o grafo por níveis e todas as arestas possuem custo 1, o primeiro caminho encontrado até a casa de destino corresponde ao menor número de movimentos.
