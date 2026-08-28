@@ -58,7 +58,7 @@ Portanto:
 
 `|V| = 64`
 
-7. Arestas
+## 7. Arestas
 Existe uma aresta entre dois vértices quando um cavalo consegue realizar um movimento diretamente entre as duas casas correspondentes.
 
 Como o movimento do cavalo depende da posição da casa, cada vértice pode possuir até 8 arestas incidentes.
