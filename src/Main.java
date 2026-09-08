@@ -1,150 +1,88 @@
-import java.util.Scanner;
-import java.util.ArrayDeque;
-import java.util.Queue;
-
-/*
- * Beecrowd 1100 - Knight Moves
+/**
+ * beecrowd 1100 - Movimentos do Cavalo
  *
- * Modelagem (Marco 1):
- *   - Vertices: as 64 casas do tabuleiro (pares coluna, linha).
- *   - Arestas: duas casas sao ligadas quando um cavalo realiza
- *     um unico movimento entre elas.
- *   - Grafo nao direcionado e nao ponderado -> menor caminho = BFS.
+ * Para cada par de casas (origem, destino), calcula o menor número de
+ * movimentos que um cavalo de xadrez precisa para ir de uma até a outra,
+ * usando BFS (Busca em Largura) sobre a representação implícita do grafo
+ * do problema: cada casa é um vértice, e os vizinhos de uma casa são
+ * gerados sob demanda aplicando os 8 deslocamentos possíveis do cavalo.
  *
- * Representacao computacional (Marco 2):
- *   - Representacao IMPLICITA: nao existe matriz nem lista de
- *     adjacencia armazenada. Os vizinhos de uma casa sao gerados
- *     sob demanda pelo metodo gerarVizinhos(), aplicando os 8
- *     deslocamentos do cavalo e descartando os que saem do tabuleiro.
- *
- * Algoritmo (Marcos 3 e 4):
- *   - BFS a partir da casa de origem, ate alcancar a casa de destino.
- *   - BFS garante distancia minima em grafo nao ponderado (diferente
- *     de uma DFS, que apenas garante alcancabilidade).
+ * BFS é o algoritmo certo aqui (e não DFS) porque ele explora o grafo
+ * "em camadas" a partir da origem: primeiro todas as casas alcançaveis
+ * em 1 movimento, depois em 2, e assim por diante. Isso garante que,
+ * quando o destino é encontrado, o número de movimentos usado até ali
+ * é, por construção, o menor possível.
  */
 public class Main {
 
+    static final int N = 8;
 
-        // Tamanho fixo do tabuleiro (8x8), conforme restricao do enunciado.
-        static final int TAMANHO = 8;
+    static final int[] DLINHA  = {+2, +2, -2, -2, +1, +1, -1, -1};
+    static final int[] DCOLUNA = {+1, -1, +1, -1, +2, -2, +2, -2};
 
-        // Os 8 deslocamentos possiveis do movimento do cavalo.
-        // Cada linha e um par (deltaColuna, deltaLinha).
-        static final int[][] MOVIMENTOS = {
-                {1, 2}, {1, -2}, {-1, 2}, {-1, -2},
-                {2, 1}, {2, -1}, {-2, 1}, {-2, -1}
-        };
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        public static void main (String[]args){
-            Scanner entrada = new Scanner(System.in);
-            StringBuilder saida = new StringBuilder();
+        while (sc.hasNext()) {
+            String origem = sc.next();
+            String destino = sc.next();
 
-            // A entrada tem um ou mais casos de teste, um por linha,
-            // ate o fim do arquivo (EOF).
-            while (entrada.hasNext()) {
-                String origemStr = entrada.next();
-                String destinoStr = entrada.next();
+            int movimentos = bfs(origem, destino);
 
-                // Converte a notacao de xadrez (ex: "a1") em coordenadas
-                // inteiras (coluna, linha), ambas de 0 a 7.
-                int[] origem = converterCasa(origemStr);
-                int[] destino = converterCasa(destinoStr);
+            System.out.println("To get from " + origem + " to " + destino
+                    + " takes " + movimentos + " knight moves.");
+        }
+    }
 
-                int movimentos = bfs(origem, destino);
+    static int bfs(String origem, String destino) {
 
-                saida.append("To get from ").append(origemStr)
-                        .append(" to ").append(destinoStr)
-                        .append(" takes ").append(movimentos)
-                        .append(" knight moves.\n");
-            }
-
-            System.out.print(saida);
-            entrada.close();
+        int[][] distancia = new int[N][N];
+        for (int[] linha : distancia) {
+            java.util.Arrays.fill(linha, -1);
         }
 
-        /**
-         * Converte uma casa no formato "a1"-"h8" para coordenadas inteiras.
-         * Letra -> coluna (a=0, ..., h=7); digito -> linha (1=0, ..., 8=7).
-         */
-        static int[] converterCasa (String casa){
-            int coluna = casa.charAt(0) - 'a';
-            int linha = casa.charAt(1) - '1';
-            return new int[]{coluna, linha};
+        int[] ini = paraPosicao(origem);
+        int[] fim = paraPosicao(destino);
+
+        if (ini[0] == fim[0] && ini[1] == fim[1]) {
+            return 0;
         }
 
-        /**
-         * Gera os vizinhos validos de uma casa (coluna, linha), aplicando
-         * os 8 deslocamentos do cavalo e descartando os que caem fora
-         * do tabuleiro. Isso é a "representacao implicita": os vizinhos
-         * nao estao guardados em lugar nenhum, sao calculados aqui,
-         * toda vez que a BFS precisa deles.
-         */
-        static int[][] gerarVizinhos ( int coluna, int linha){
-            int[][] candidatos = new int[8][2];
-            int total = 0;
+        Queue<int[]> fila = new LinkedList<>();
+        distancia[ini[0]][ini[1]] = 0;
+        fila.add(ini);
 
-            for (int[] deslocamento : MOVIMENTOS) {
-                int novaColuna = coluna + deslocamento[0];
-                int novaLinha = linha + deslocamento[1];
+        while (!fila.isEmpty()) {
+            int[] atual = fila.poll();
+            int linha  = atual[0];
+            int coluna = atual[1];
+
+            for (int i = 0; i < 8; i++) {
+                int novaLinha  = linha  + DLINHA[i];
+                int novaColuna = coluna + DCOLUNA[i];
 
                 boolean dentroDoTabuleiro =
-                        novaColuna >= 0 && novaColuna < TAMANHO &&
-                                novaLinha >= 0 && novaLinha < TAMANHO;
+                        novaLinha >= 0 && novaLinha < N &&
+                        novaColuna >= 0 && novaColuna < N;
 
-                if (dentroDoTabuleiro) {
-                    candidatos[total][0] = novaColuna;
-                    candidatos[total][1] = novaLinha;
-                    total++;
-                }
-            }
+                if (dentroDoTabuleiro && distancia[novaLinha][novaColuna] == -1) {
+                    distancia[novaLinha][novaColuna] = distancia[linha][coluna] + 1;
 
-            // Retorna apenas as posicoes realmente preenchidas.
-            int[][] vizinhos = new int[total][2];
-            System.arraycopy(candidatos, 0, vizinhos, 0, total);
-            return vizinhos;
-        }
-
-        /**
-         * BFS que calcula o numero minimo de movimentos de cavalo
-         * entre a casa de origem e a casa de destino.
-         */
-        static int bfs ( int[] origem, int[] destino){
-            // dist[coluna][linha] guarda a distancia (numero de movimentos)
-            // ate aquela casa. -1 significa "ainda nao visitada".
-            int[][] dist = new int[TAMANHO][TAMANHO];
-            for (int[] linha : dist) {
-                java.util.Arrays.fill(linha, -1);
-            }
-
-            Queue<int[]> fila = new ArrayDeque<>();
-
-            dist[origem[0]][origem[1]] = 0;
-            fila.add(origem);
-
-            while (!fila.isEmpty()) {
-                int[] atual = fila.poll();
-
-                // Parada antecipada: assim que o destino e retirado da
-                // fila, sua distancia ja e a distancia minima final.
-                if (atual[0] == destino[0] && atual[1] == destino[1]) {
-                    return dist[atual[0]][atual[1]];
-                }
-
-                // Gera os vizinhos sob demanda (representacao implicita).
-                for (int[] vizinho : gerarVizinhos(atual[0], atual[1])) {
-                    int vc = vizinho[0];
-                    int vl = vizinho[1];
-
-                    if (dist[vc][vl] == -1) { // ainda nao visitado
-                        dist[vc][vl] = dist[atual[0]][atual[1]] + 1;
-                        fila.add(vizinho);
+                    if (novaLinha == fim[0] && novaColuna == fim[1]) {
+                        return distancia[novaLinha][novaColuna];
                     }
+
+                    fila.add(new int[]{novaLinha, novaColuna});
                 }
             }
-
-            // Nao deveria acontecer no tabuleiro 8x8 real (grafo conexo),
-            // mas fica como salvaguarda.
-            return dist[destino[0]][destino[1]];
         }
 
+        return distancia[fim[0]][fim[1]];
+    }
+
+    static int[] paraPosicao(String casa) {
+        int coluna = casa.charAt(0) - 'a';
+        int linha  = casa.charAt(1) - '1';
+        return new int[]{linha, coluna};
+    }
 }
