@@ -1,3 +1,7 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
 /**
  * beecrowd 1100 - Movimentos do Cavalo
  *
