@@ -85,7 +85,7 @@ Também foi utilizada como referência a implementação de **BFS (Breadth-First
 
 **Referências:**
 
-- [Graph.java — repositório do professor](https://github.com/carubbi/RPG/blob/main/algs4-java/algs4/Graph.java)
+- [Graph.java - disponibilizado pelo repositório do professor](https://github.com/carubbi/RPG/blob/main/algs4-java/algs4/Graph.java)
 
 ## 9. Alterações
 
@@ -159,5 +159,5 @@ Também foram realizados testes adicionais durante o desenvolvimento para verifi
 A implementação foi submetida ao **Beecrowd**, utilizando a linguagem Java, e obteve resultado Accepted para o problema 1100 - Movimentos do Cavalo.
 
 ### Evidência da submissão
-> **Evidência:** [evidencias](https://github.com/gabrielcajado/trabalhoGrafos/tree/main/evidencias)
+> **Evidência:** [evidencias](https://github.com/gabrielcajado/trabalhoGrafos/blob/d9233b08b78ee92f9a33c6674755776d7b0207de/evidencias/acceptedBeecrowd.png)
 
