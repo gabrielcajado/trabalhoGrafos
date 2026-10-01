@@ -1,4 +1,4 @@
-# Marco 2 — Componentes conexas
+# Marco 2 - Componentes conexas
 
 Aplicação dos tópicos do Marco 2 ao problema **315 - Network (UVA)**, usando uma instância reduzida do grafo (V ≤ 6, E ≤ 6), simples e não dirigido.
 

@@ -1,3 +1,5 @@
+# Marco 1 - Problema e conhecimento prévio
+
 ## 1. Resumo de entrada, saída e restrições
 
 **Entrada:** vários blocos, um por rede. Cada bloco começa com N (número de lugares, N < 100). 
