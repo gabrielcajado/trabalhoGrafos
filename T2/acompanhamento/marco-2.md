@@ -33,7 +33,7 @@ Distâncias (nº de arestas) calculadas por BFS a partir de cada vértice:
 | 5 | 2 | 1 | 2 | 1 | - | 1 | **2** |
 | 6 | 3 | 2 | 3 | 2 | 1 | - | **3** |
 
-Como o grafo é conexo (uma única componente), esses valores valem para o grafo inteiro:
+Como o grafo é conexo (uma única componente) esses valores valem para o grafo inteiro:
 
 - **Raio** = 2 (menor excentricidade, atingida em 2 e 5)
 - **Diâmetro** = 3 (maior excentricidade — ex.: entre 1 e 4, ou entre 1 e 6)
