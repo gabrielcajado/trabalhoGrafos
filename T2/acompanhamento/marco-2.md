@@ -36,14 +36,14 @@ Distâncias (nº de arestas) calculadas por BFS a partir de cada vértice:
 Como o grafo é conexo (uma única componente) esses valores valem para o grafo inteiro:
 
 - **Raio** = 2 (menor excentricidade, atingida em 2 e 5)
-- **Diâmetro** = 3 (maior excentricidade — ex.: entre 1 e 4, ou entre 1 e 6)
+- **Diâmetro** = 3 (maior excentricidade - ex.: entre 1 e 4, ou entre 1 e 6)
 - **Vértices centrais / centro** = {2, 5}
 
 ## 4. Rastreamento manual do algoritmo de componentes conexas (DFS recursiva)
 
 **Estruturas de dados:**
-- `visited[1..6]` — booleano, marca se o vértice já foi visitado
-- `comp[1..6]` — id da componente à qual o vértice pertence
+- `visited[1..6]` - booleano, marca se o vértice já foi visitado
+- `comp[1..6]` - id da componente à qual o vértice pertence
 - pilha implícita da recursão (call stack)
 
 **Lógica:** para cada vértice não visitado no laço externo, inicia uma nova componente e dispara uma DFS que marca todos os vértices alcançáveis a partir dele com o mesmo id.
@@ -75,10 +75,10 @@ v = 1, não visitado → nova componente (1). DFS(1):
 v = 2, 3, 4, 5, 6 → todos já visitados, laço externo termina
 ```
 
-**Resultado:** uma única componente, contendo todos os 6 vértices — condiz com a premissa do problema real, em que a rede sempre chega conectada na entrada.
+**Resultado:** uma única componente, contendo todos os 6 vértices - condiz com a premissa do problema real, em que a rede sempre chega conectada na entrada.
 
 ## 5. Complexidade e custo das consultas de conectividade
 
-- **Tempo:** O(V + E) — cada vértice é visitado uma única vez (`visited[]`), e cada aresta é examinada no máximo duas vezes (uma por extremidade, já que a lista de adjacência guarda a ligação nos dois sentidos).
-- **Espaço:** O(V) — `visited[]`/`comp[]` ocupam O(V); a pilha de recursão, no pior caso (grafo em formato de caminho), chega a O(V);
+- **Tempo:** O(V + E) - cada vértice é visitado uma única vez (`visited[]`), e cada aresta é examinada no máximo duas vezes (uma por extremidade, já que a lista de adjacência guarda a ligação nos dois sentidos).
+- **Espaço:** O(V) - `visited[]`/`comp[]` ocupam O(V); a pilha de recursão, no pior caso (grafo em formato de caminho), chega a O(V);
 - **Consulta de conectividade:** depois de uma única DFS preenchendo `comp[]`, qualquer consulta "u e v estão conectados?" vira uma comparação `comp[u] == comp[v]`, custando **O(1)**. O custo caro é apenas o pré-processamento (a DFS em si, executada uma única vez).
