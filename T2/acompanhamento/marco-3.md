@@ -34,33 +34,43 @@ O repositório algs4, disponibilizado pelo professor, contém uma classe pronta 
 
 Mesma instância do Marco 2: vértices {1..6}, arestas {1-2, 2-3, 3-4, 4-5, 5-6, 2-5}, DFS iniciada na raiz 1 (`dfs(graph, 1, 1)`, já que `Biconnected` sinaliza raiz com `parent == vertex`).
 
-### 3.1 Tabela marked / edgeTo (DFS genérica)
+## 3. Instância pequena e rastreamento manual
 
-Rastreamento no estilo clássico de `DepthFirstPaths.java`/`DepthFirstSearch.java` do algs4, mostrando a árvore de busca formada:
+Mesma instância do Marco 2: vértices {1..6}, arestas {1-2, 2-3, 3-4, 4-5, 5-6, 2-5}, DFS iniciada na raiz 1 (`dfs(graph, 1, 1)`, já que `Biconnected` sinaliza raiz com `parent == vertex`).
 
-| vértice | marked | edgeTo |
-|---|---|---|
-| 1 | true | - (raiz) |
-| 2 | true | 1 |
-| 3 | true | 2 |
-| 4 | true | 3 |
-| 5 | true | 4 |
-| 6 | true | 5 |
+Vizinhos examinados em ordem crescente, conforme `adj[]`:
 
-Árvore de DFS resultante: `1 → 2 → 3 → 4 → 5 → 6` (um único caminho, sem ramificação).
+| vértice | vizinhos |
+|---|---|
+| 1 | 2 |
+| 2 | 1, 3, 5 |
+| 3 | 2, 4 |
+| 4 | 3, 5 |
+| 5 | 2, 4, 6 |
+| 6 | 5 |
 
-### 3.2 Tabela preorder / low / articulation (Biconnected)
+| Passo | Ação | Estruturas atualizadas | Decisão |
+|---|---|---|---|
+| 1 | Iniciar DFS em 1 (raiz) | preorder[1]=0, low[1]=0 | `dfs(graph, 1, 1)`; examinar vizinho 2. |
+| 2 | Avançar de 1 para 2 | preorder[2]=1, low[2]=1 | 2 é filho de 1; examinar vizinhos de 2. |
+| 3 | Vizinho 1 de 2 | sem alteração | 1 é o pai de 2, ignorar; examinar 3. |
+| 4 | Avançar de 2 para 3 | preorder[3]=2, low[3]=2 | 3 é filho de 2; examinar vizinhos de 3. |
+| 5 | Vizinho 2 de 3 | sem alteração | 2 é o pai de 3, ignorar; examinar 4. |
+| 6 | Avançar de 3 para 4 | preorder[4]=3, low[4]=3 | 4 é filho de 3; examinar vizinhos de 4. |
+| 7 | Vizinho 3 de 4 | sem alteração | 3 é o pai de 4, ignorar; examinar 5. |
+| 8 | Avançar de 4 para 5 | preorder[5]=4, low[5]=4 | 5 é filho de 4; examinar vizinhos de 5. |
+| 9 | Vizinho 4 de 5 | sem alteração | 4 é o pai de 5, ignorar; examinar 6. |
+| 10 | Avançar de 5 para 6 | preorder[6]=5, low[6]=5 | 6 é filho de 5; examinar vizinhos de 6. |
+| 11 | Vizinho 5 de 6 | sem alteração | 5 é o pai de 6, ignorar. Sem mais vizinhos: `dfs(6)` retorna. |
+| 12 | Retornar de 6 para 5 | low[5] = min(4, low[6]=5) = 4 | `low[6]=5 >= preorder[5]=4` → **5 é marcado crítico**. |
+| 13 | Vizinho 2 de 5 | low[5] = min(4, preorder[2]=1) = 1 | 2 já visitado e não é o pai de 5: aresta de retorno. Sem mais vizinhos: `dfs(5)` retorna. |
+| 14 | Retornar de 5 para 4 | low[4] = min(3, low[5]=1) = 1 | `low[5]=1 >= preorder[4]=3`? Não → 4 não é crítico. Sem mais vizinhos: `dfs(4)` retorna. |
+| 15 | Retornar de 4 para 3 | low[3] = min(2, low[4]=1) = 1 | `low[4]=1 >= preorder[3]=2`? Não → 3 não é crítico. Sem mais vizinhos: `dfs(3)` retorna. |
+| 16 | Retornar de 3 para 2 | low[2] = min(1, low[3]=1) = 1 | `low[3]=1 >= preorder[2]=1` → **2 é marcado crítico**. |
+| 17 | Vizinho 5 de 2 | low[2] = min(1, preorder[5]=4) = 1 (sem mudança) | 5 já visitado e não é o pai de 2: aresta de retorno. Sem mais vizinhos: `dfs(2)` retorna. |
+| 18 | Retornar de 2 para 1 | low[1] = min(0, low[2]=1) = 0 | 1 é raiz e teve apenas 1 filho (não > 1) → 1 não é crítico. DFS encerra: todos os 6 vértices visitados. |
 
-`Biconnected.java` não usa `marked[]`/`edgeTo[]` - usa `preorder[]`, `low[]` e `articulation[]`, com o "pai" passado como parâmetro da recursão (`dfs(graph, parent, vertex)`) em vez de armazenado em array:
-
-| vertex | preorder | low | é raiz com 2+ filhos? | articulation? |
-|---|---|---|---|---|
-| 1 | 0 | 0 | não (1 filho só) | não |
-| 2 | 1 | 1 | — | **sim** - filho 3: `low[3]=1 >= preorder[2]=1` |
-| 3 | 2 | 1 | — | não - filho 4: `low[4]=1 >= preorder[3]=2`? não |
-| 4 | 3 | 1 | — | não - filho 5: `low[5]=1 >= preorder[4]=3`? não |
-| 5 | 4 | 1 | — | **sim** - filho 6: `low[6]=5 >= preorder[5]=4` |
-| 6 | 5 | 5 | folha, sem filhos | não |
+**Resultado:** `articulation[] = {1: false, 2: true, 3: false, 4: false, 5: true, 6: false}` → pontos críticos = {2, 5} → resposta do bloco = **2**.
 
 ## 4. Complexidade de tempo e memória
 
