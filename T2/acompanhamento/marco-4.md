@@ -1,6 +1,6 @@
 # Marco 4 - Implementação final e conclusão
 
-**Problema:** UVA 315 — Network (pontos de articulação)
+**Problema:** UVA 315 - Network (pontos de articulação)
 
 **Linguagem:** Java
 
